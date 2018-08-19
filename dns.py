@@ -12,8 +12,8 @@ def dns(file_path):
     Query DNS
     :param file_path: a list of urls
     :return:
-        x: a set of ip
-        y: urls can't be queried successfully
+        x: a set of ip addrs
+        y: a list of urls which can't be queried successfully
     """
     x = set()
     y = []
