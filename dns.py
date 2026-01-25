@@ -1,29 +1,29 @@
-#!/usr/bin/python3.6
-# -*- coding :u tf-8 -*-
-#
-# __author__ = Su
-#
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import socket
+from typing import List, Set, Tuple
 
 
-def dns(file_path):
+def dns(file_path: str) -> Tuple[Set[str], List[str]]:
+    """Query DNS for each URL listed in a file.
+
+    Args:
+        file_path: Path to a file containing one URL per line.
+
+    Returns:
+        A tuple of (resolved_ips, failed_urls).
     """
-    Query DNS
-    :param file_path: a list of urls
-    :return:
-        x: a set of ip addrs
-        y: a list of urls which can't be queried successfully
-    """
-    x = set()
-    y = []
-    with open(file_path, "r") as f:
-        for url in f.readlines():
+    resolved_ips: Set[str] = set()
+    failed_urls: List[str] = []
+    with open(file_path, "r", encoding="utf-8") as file_handle:
+        for line in file_handle:
+            url = line.strip()
+            if not url:
+                continue
             try:
-                r = socket.gethostbyname_ex(url.strip())
+                _, _, ip_addresses = socket.gethostbyname_ex(url)
             except (socket.gaierror, socket.herror):
-                y.append(url)
+                failed_urls.append(url)
             else:
-                for i in r[2]:
-                    x.add(i)
-    return x, y
+                resolved_ips.update(ip_addresses)
+    return resolved_ips, failed_urls
